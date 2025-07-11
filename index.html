@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chatbot</title>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: sans-serif; margin: 0; padding: 20px; }
+    #chat-box { height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
+    input, button { padding: 10px; font-size: 16px; }
+  </style>
+</head>
+<body>
+
+  <h3>Chat with our AI</h3>
+  <div id="chat-box"></div>
+  <input id="user-input" placeholder="Type your message" />
+  <button id="send-btn">Send</button>
+
+  <script>
+    document.getElementById("send-btn").addEventListener("click", async () => {
+      const input = document.getElementById("user-input");
+      const chatBox = document.getElementById("chat-box");
+      const message = input.value.trim();
+      if (!message) return;
+      chatBox.innerHTML += `<div><strong>You:</strong> ${message}</div>`;
+      input.value = "";
+
+      try {
+        const res = await fetch("https://thinkificbackend.onrender.com/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message })
+        });
+        const data = await res.json();
+        chatBox.innerHTML += `<div><strong>Bot:</strong> ${data.reply}</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+      } catch (e) {
+        chatBox.innerHTML += `<div style="color:red;"><strong>Error:</strong> Could not connect.</div>`;
+      }
+    });
+  </script>
+
+</body>
+</html>
