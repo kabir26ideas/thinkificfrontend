@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 <head>
   <title>Chatbot</title>
@@ -40,5 +40,120 @@
     });
   </script>
 
+</body>
+</html>
+ -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ <!DOCTYPE html>
+<html>
+<head>
+  <title>Chatbot</title>
+  <meta charset="UTF-8">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: sans-serif;
+      background: #f9f9f9;
+    }
+
+    #chat-container {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    h3 {
+      margin: 0 0 10px 0;
+      font-size: 18px;
+    }
+
+    #chat-box {
+      flex: 1;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 10px;
+      background: #fff;
+    }
+
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      margin-right: 5px;
+    }
+
+    #input-row {
+      display: flex;
+    }
+
+    #user-input {
+      flex: 1;
+    }
+  </style>
+</head>
+<body>
+  <div id="chat-container">
+    <h3>Chat with our AI</h3>
+    <div id="chat-box"></div>
+    <div id="input-row">
+      <input id="user-input" placeholder="Type your message" />
+      <button id="send-btn">Send</button>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("send-btn").addEventListener("click", async () => {
+      const input = document.getElementById("user-input");
+      const chatBox = document.getElementById("chat-box");
+      const message = input.value.trim();
+      if (!message) return;
+      chatBox.innerHTML += `<div><strong>You:</strong> ${message}</div>`;
+      input.value = "";
+
+      try {
+        const res = await fetch("https://thinkificbackend.onrender.com/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message })
+        });
+        const data = await res.json();
+        chatBox.innerHTML += `<div><strong>Bot:</strong> ${data.reply}</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+      } catch (e) {
+        chatBox.innerHTML += `<div style="color:red;"><strong>Error:</strong> Could not connect.</div>`;
+      }
+    });
+  </script>
 </body>
 </html>
